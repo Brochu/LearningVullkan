@@ -1,17 +1,31 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(LearnVulkan
-    LANGUAGES CXX
-)
+project(LearnVulkan)
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(Vulkan REQUIRED)
 
-add_executable(LearnVulkan)
-target_sources(LearnVulkan PRIVATE main.cpp)
+find_package(GLM REQUIRED)
+include_directories(${GLM_INCLUDE_DIRS})
+link_directories(${GLM_LIBRARY_DIRS})
+add_definitions(${GLM_DEFINITIONS})
 
-target_link_libraries(LearnVulkan PRIVATE Vulkan::Vulkan)
+add_subdirectory($ENV{GLFW3_ROOT} ./bin)
+include_directories($ENV{GLFW3_ROOT}/include)
+
+file (GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/source/*.cpp
+)
+file (GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/headers/*.h
+)
+
+add_compile_options(-std=c++17 -O2 -g)
+
+add_executable(LearnVulkan)
+
+target_sources(LearnVulkan PRIVATE ${SRC_FILES} ${HEADER_FILES})
+target_include_directories(LearnVulkan PRIVATE ${PROJECT_SOURCE_DIR}/headers)
+
+target_link_libraries(LearnVulkan PRIVATE Vulkan::Vulkan ${GLM_LIBRARIES} glfw ${GLFW_LIBRARIES})
