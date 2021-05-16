@@ -21,7 +21,7 @@ file (GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/headers/*.h
 )
 
-add_compile_options(-std=c++17 -O2 -g)
+add_compile_options(-std=c++17 -O0 -g)
 
 add_executable(LearnVulkan)
 
