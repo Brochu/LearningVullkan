@@ -4,6 +4,7 @@
 
 #include <assert.h>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <optional>
 #include <set>
@@ -56,6 +57,9 @@ private:
     VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
     void createSwapChain();
     void createImageViews();
+    void createGraphicsPipeline();
+    VkShaderModule createShaderModule(const std::vector<char>& bytecode);
+    void createRenderPass();
 
     void setupDebugMessenger();
     void populateDebugMessagerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -75,6 +79,9 @@ private:
     VkFormat swapChainImageFormat;
     VkExtent2D swapChainExtent;
     std::vector<VkImageView> swapChainImageViews;
+    VkRenderPass renderPass;
+    VkPipelineLayout pipelineLayout;
+    VkPipeline graphicsPipeline;
 
     const uint32_t WIDTH = 800;
     const uint32_t HEIGHT = 600;
