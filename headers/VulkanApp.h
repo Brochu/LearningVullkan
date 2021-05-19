@@ -39,6 +39,7 @@ private:
     void initWindow();
     void initVulkan();
     void mainLoop();
+    void drawFrame();
     void cleanup();
 
     // Vulkan specific funcs
@@ -61,6 +62,9 @@ private:
     VkShaderModule createShaderModule(const std::vector<char>& bytecode);
     void createRenderPass();
     void createFramebuffers();
+    void createCommandPool();
+    void createCommandBuffers();
+    void createSyncObjs();
 
     void setupDebugMessenger();
     void populateDebugMessagerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -85,8 +89,17 @@ private:
     VkPipeline graphicsPipeline;
     std::vector<VkFramebuffer> swapChainFramebuffers;
 
+    VkCommandPool commandPool;
+    std::vector<VkCommandBuffer> commandBuffers;
+    std::vector<VkSemaphore> imageAvailableSemaphores;
+    std::vector<VkSemaphore> renderFinishedSemaphores;
+    std::vector<VkFence> inFlightFences;
+    std::vector<VkFence> imagesInFlight;
+    size_t currentFrame = 0;
+
     const uint32_t WIDTH = 800;
     const uint32_t HEIGHT = 600;
+    const int MAX_FRAMES_IN_FLIGHT = 2;
 
     const std::vector<const char*> validationLayers =
     {
