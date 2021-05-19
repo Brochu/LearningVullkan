@@ -60,6 +60,7 @@ private:
     void createGraphicsPipeline();
     VkShaderModule createShaderModule(const std::vector<char>& bytecode);
     void createRenderPass();
+    void createFramebuffers();
 
     void setupDebugMessenger();
     void populateDebugMessagerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
@@ -82,6 +83,7 @@ private:
     VkRenderPass renderPass;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+    std::vector<VkFramebuffer> swapChainFramebuffers;
 
     const uint32_t WIDTH = 800;
     const uint32_t HEIGHT = 600;
