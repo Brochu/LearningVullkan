@@ -8,26 +8,20 @@ void main()
 {
     vec2 z, c;
 
-    // Offset and Zoom for the mandlebrot
-    float scale = 2.0;
-    vec2 center = vec2(0.35, 0.0);
-    c.x = 1.3333 * (UVs.x - 0.5) * scale - center.x; // Difference is related to aspect ratio
+    float scale = 0.05;
+    vec2 center = vec2(1.05, 0.27);
+    c.x = 1.3333 * (UVs.x - 0.5) * scale - center.x;
     c.y = (UVs.y - 0.5) * scale - center.y;
 
     int i;
-    int MAX_ITER = 10000;
     z = c;
-    for(i = 0; i < MAX_ITER; ++i)
-    {
-        float x = (z.x * z.x - z.y * z.y) + c.x;
-        float y = (z.y * z.x + z.x * z.y) + c.y;
+    for(i=0; i<256; i++) {
+        vec2 n = vec2((z.x * z.x - z.y * z.y) + c.x, (z.y * z.x + z.x * z.y) + c.y);
 
-        if ((x * x + y * y) > 4.0) break;
-        z.x = x;
-        z.y = y;
+        if(dot(n, n) > 4.0) break;
+        z = n;
     }
 
-    float t = i / MAX_ITER;
-    //outColor = vec4(t, t, t, 1.0);
-    outColor = vec4(t*UVs, 0.2, 1.0);
+    float t = (i == 256 ? 0.0 : float(i)) / 100.0;
+    outColor = vec4(sin(t), 1.0 - cos(t), /*1.0 - */tan(t), 1.0);
 }
