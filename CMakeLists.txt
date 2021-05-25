@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 
 project(LearnVulkan)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set (CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_BUILD_TYPE "Debug")
 
 find_package(Vulkan REQUIRED)
 
@@ -20,8 +22,6 @@ file (GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
 file (GLOB_RECURSE HEADER_FILES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/headers/*.h
 )
-
-add_compile_options(-std=c++17 -O0 -g)
 
 add_executable(LearnVulkan)
 
