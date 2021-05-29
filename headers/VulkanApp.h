@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
+#include <array>
 #include <assert.h>
 #include <chrono>
 #include <cstdlib>
@@ -32,6 +33,44 @@ struct SwapChainSupportDetails
     VkSurfaceCapabilitiesKHR capabilities;
     std::vector<VkSurfaceFormatKHR> formats;
     std::vector<VkPresentModeKHR> presentModes;
+};
+
+struct Vertex
+{
+    glm::vec2 pos;
+    glm::vec3 color;
+    glm::vec2 uvs;
+
+    static VkVertexInputBindingDescription getBindingDescription()
+    {
+        VkVertexInputBindingDescription bindingDescription{};
+        bindingDescription.binding = 0;
+        bindingDescription.stride = sizeof(Vertex);
+        bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+
+        return bindingDescription;
+    }
+
+    static std::array<VkVertexInputAttributeDescription, 3> getAttributeDescriptions()
+    {
+        std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+        attributeDescriptions[0].binding = 0;
+        attributeDescriptions[0].location = 0;
+        attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[0].offset = offsetof(Vertex, pos);
+
+        attributeDescriptions[1].binding = 0;
+        attributeDescriptions[1].location = 1;
+        attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+        attributeDescriptions[1].offset = offsetof(Vertex, color);
+
+        attributeDescriptions[2].binding = 0;
+        attributeDescriptions[2].location = 2;
+        attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+        attributeDescriptions[2].offset = offsetof(Vertex, uvs);
+
+        return attributeDescriptions;
+    }
 };
 
 struct UniformBufferObject
@@ -99,6 +138,7 @@ private:
             VkMemoryPropertyFlags properties,
             VkBuffer& buffer,
             VkDeviceMemory& bufferMemory);
+    void createVertexBuffer();
     void createUniformBuffers();
     void updateUniformBuffer(uint32_t currentImage);
     void createDescriptorPool();
@@ -135,14 +175,16 @@ private:
     std::vector<VkFence> inFlightFences;
     std::vector<VkFence> imagesInFlight;
 
+    VkBuffer vertexBuffer;
+    VkDeviceMemory vertexBufferMemory;
     std::vector<VkBuffer> uniformBuffers;
     std::vector<VkDeviceMemory> uniformBuffersMemory;
     VkDescriptorPool descriptorPool;
     std::vector<VkDescriptorSet> descriptorSets;
     size_t currentFrame = 0;
 
-    const uint32_t WIDTH = 800;
-    const uint32_t HEIGHT = 600;
+    const uint32_t WIDTH = 1600;
+    const uint32_t HEIGHT = 900;
     const int MAX_FRAMES_IN_FLIGHT = 2;
 
     const std::vector<const char*> validationLayers =
@@ -153,6 +195,17 @@ private:
     const std::vector<const char*> deviceExtensions =
     {
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    };
+
+    const std::vector<Vertex> vertices =
+    { //  pos           color    uvs
+        {{-1.f, -1.f}, {0,0,0}, {0.f, 0.f}},
+        {{ 1.f, -1.f}, {1,1,1}, {1.f, 0.f}},
+        {{-1.f,  1.f}, {1,1,1}, {0.f, 1.f}},
+
+        {{-1.f,  1.0}, {1,1,1}, {0.f, 1.f}},
+        {{ 1.f, -1.f}, {1,1,1}, {1.f, 0.f}},
+        {{ 1.f,  1.f}, {0,0,0}, {1.f, 1.f}}
     };
 
 #ifdef NDEBUG
